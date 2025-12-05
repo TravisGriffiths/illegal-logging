@@ -4,6 +4,6 @@
 !/data-files/README.md
 
 # Do not put imported databases to git
-/databases
+/databases/*
 # Keep the README
 !/databases/README.md
