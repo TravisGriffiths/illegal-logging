@@ -1,0 +1,9 @@
+# Do not put downloaded data to git
+/data-files/*
+# Keep the README
+!/data-files/README.md
+
+# Do not put imported databases to git
+/databases
+# Keep the README
+!/databases/README.md
