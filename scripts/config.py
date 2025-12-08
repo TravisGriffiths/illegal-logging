@@ -1,6 +1,9 @@
+# These are the settings for all the scripts. Behavior and targets can be easily changed by changing values here
 AUTEX_DIR       = 'Autex'
 DATA_DIR        = 'data-files'
 DATABASE_DIR    = 'databases'
 SQL_DATABASE    = 'forestry.db'
 PMFS_DIR        = 'PMFS'
 PMFS_URL        = 'https://dadosabertos.ibama.gov.br/dados/SINAFLOR/pmfs/AmazoniaLegal/pmfsAmazoniaLegal_json.zip'
+CNPJ_URL        = 'https://arquivos.receitafederal.gov.br/dados/cnpj/dados_abertos_cnpj'
+CNPJ_DIR        = 'CNPJ'
