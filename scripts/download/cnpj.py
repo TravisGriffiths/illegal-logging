@@ -28,13 +28,30 @@ def mostRecent(a: str | None, b: str | None):
         return a 
     else:
         return b
+    
+def checkDirectory(dir: str):
+    if not os.path.exists(dir):
+        os.makedirs(dir)
+        print(f'Created directory: {dir}')
+    else:
+        print(f'CNPJ directory: {dir} already exists')
+
+def haveFile(file: str):
+    if os.path.exists(file):
+        print(f'File {file} already exists')
+        return True 
+    else:
+        print(f'File {file} not yet downloaded')
+        return False
 
 # "2025-05/"?
 def isDownloadLink(href: str):
     tokens = href.rstrip('/').split('-')
     return len(tokens) == 2 and tokens[0].isdigit() and tokens[1].isdigit()
 
+# dir is the directory where all CNPJ data should be downloaded to. 
 def downloadCNPJ(dir: str):
+    checkDirectory(dir)
     current_html = get(CNPJ_URL)
     if not current_html:
         print(f'Unable to get existing data from {CNPJ_URL}')
@@ -63,7 +80,10 @@ def downloadCNPJ(dir: str):
                     zip_routes = [ { 'file': f'{dir}/{zip}', 'url': f'{current_url}{zip}' } for zip in zips  ]
                     print(f'Grab zip File: {zip_routes[0].get('file')}')
                     print(f'Zip URL: {zip_routes[0].get('url')}')
-                    fetch(zip_routes[0].get('url'), zip_routes[0].get('file'))
+                    if not haveFile(zip_routes[0].get('file')):
+                        fetch(zip_routes[0].get('url'), zip_routes[0].get('file'))
+                    else:
+                        print(f'File {zip_routes[0].get('file')} already exists, skipping download')
 
         else:
             print(f'Failed to find the most recent link')
