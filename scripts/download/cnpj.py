@@ -78,12 +78,13 @@ def downloadCNPJ(dir: str):
                         zips.append(href)
                 else:
                     zip_routes = [ { 'file': f'{dir}/{zip}', 'url': f'{current_url}{zip}' } for zip in zips  ]
-                    print(f'Grab zip File: {zip_routes[0].get('file')}')
-                    print(f'Zip URL: {zip_routes[0].get('url')}')
-                    if not haveFile(zip_routes[0].get('file')):
-                        fetch(zip_routes[0].get('url'), zip_routes[0].get('file'))
-                    else:
-                        print(f'File {zip_routes[0].get('file')} already exists, skipping download')
+                    for zip in zip_routes:
+                        if not haveFile(zip.get('file')):
+                            print(f'Grab zip File: {zip.get('file')}')
+                            print(f'Zip URL: {zip.get('url')}')
+                            fetch(zip_routes[0].get('url'), zip.get('file'))
+                        else:
+                            print(f'File {zip_routes[0].get('file')} already exists, skipping download')
 
         else:
             print(f'Failed to find the most recent link')

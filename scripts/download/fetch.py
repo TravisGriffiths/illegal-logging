@@ -1,5 +1,7 @@
 import requests
 import re
+import shutil
+import os
 
 def stringifyKbs(kbs: int):
     units = ['kb', 'mb', 'gb', 'tb', 'pb']
@@ -9,6 +11,15 @@ def stringifyKbs(kbs: int):
         kbs = kbs / divisor
         unit_idx += 1
     return f'{round(kbs, 2)} {units[unit_idx]}'
+
+def have_full_file(filename: str, total: int):
+    if not os.path.exists(filename):
+        return False
+    size = os.path.getsize(filename)
+    if size < total:
+        print(f'{round(size / 1024)} of {round(total / 1024)} kb downloaded')
+        return False 
+    return True
 
 def fetch(url: str, filename: str):
     if filename == None:
@@ -21,22 +32,25 @@ def fetch(url: str, filename: str):
     origin = urlScan.group(0)
     if origin:
         headers = {
+            'Accept-Encoding': 'identity, deflate, compress, gzip', 
+            'Accept': '*/*',
             'Origin': origin,  # Set the origin to match the expected value
+            'Connection': 'keep-alive',
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
         }
-        response = requests.get(url, stream=True, headers=headers)
-        if response.status_code == 200:
-            with open(filename, 'wb') as file:
-                print(f'Starting download...')
-                kbs = 0
-                for chunk in response.iter_content(chunk_size=1024):
-                    if chunk:
-                        kbs += 1
-                        file.write(chunk)
-                else:
-                    print(f"\nDownload complete - {stringifyKbs(kbs)} - file at: {filename} named as: {file.name}")
-        else:
-            print(f"Failed to download file from {url}. Status code: {response.status_code}")
+        # Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36
+        total_content_size = int(requests.get(url, stream=True).headers['Content-Length'])
+        range = 0
+        print(f'Starting download...')
+        while not have_full_file(filename, total_content_size):
+            headers['Range'] = 'bytes=%d-' % range
+            with requests.get(url, stream=True, headers=headers) as response:
+                response.raise_for_status()
+                with open(filename, 'ab') as file:
+                    shutil.copyfileobj(response.raw, file, length=16*1024*1024)
+                    file.flush()
+            range = os.path.getsize(filename)
+            print(f'Fetch complete file size: {range} total content: {total_content_size}')
     else:
         print(f"URL: {url} not found to have usable origin (http://)")
         return
