@@ -7,6 +7,7 @@ from .fetch import fetch, get
 from .unzip import unzip
 import re
 import os
+import time
 
 def mostRecent(a: str | None, b: str | None):
     if a == None and b == None:
@@ -82,9 +83,10 @@ def downloadCNPJ(dir: str):
                         if not haveFile(zip.get('file')):
                             print(f'Grab zip File: {zip.get('file')}')
                             print(f'Zip URL: {zip.get('url')}')
-                            fetch(zip_routes[0].get('url'), zip.get('file'))
+                            fetch(zip.get('url'), zip.get('file'))
+                            time.sleep(10) # Pause to not seem like a potential DDos attack
                         else:
-                            print(f'File {zip_routes[0].get('file')} already exists, skipping download')
+                            print(f'File {zip.get('file')} already exists, skipping download')
 
         else:
             print(f'Failed to find the most recent link')
