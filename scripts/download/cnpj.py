@@ -2,7 +2,7 @@
 # files currently updated montly and are posted here: https://arquivos.receitafederal.gov.br/dados/cnpj/dados_abertos_cnpj/
 
 from bs4 import BeautifulSoup
-from ..config import CNPJ_URL, CNPJ_DIR
+from ..config import CNPJ_URL
 from .fetch import fetch, get
 from .unzip import unzip
 import re
@@ -87,6 +87,11 @@ def downloadCNPJ(dir: str):
                             time.sleep(10) # Pause to not seem like a potential DDos attack
                         else:
                             print(f'File {zip.get('file')} already exists, skipping download')
+                    print(f'Downloads complete, unzipping')
+                    for zip in zip_routes:
+                        file = zip.get('file')
+                        if haveFile(file):
+                            unzip(file, dir)
 
         else:
             print(f'Failed to find the most recent link')
