@@ -1,9 +1,9 @@
 
-import tables
+from .tables import POA
 
-rm_table_sql = f"""DROP TABLE {tables.POA};"""
+rm_table_sql = f"""DROP TABLE IF EXISTS {POA};"""
 
-create_table_sql = f"""CREATE TABLE {tables.POA} (
+create_table_sql = f"""CREATE TABLE {POA} (
     id INTEGER PRIMARY KEY,
     product TEXT,
     common_name TEXT,
@@ -45,7 +45,7 @@ create_table_sql = f"""CREATE TABLE {tables.POA} (
     last_processed TEXT
 );"""    
 
-sql = f"""INSERT INTO {tables.POA} (
+sql = f"""INSERT INTO {POA} (
     id,
     product, 
     common_name, 

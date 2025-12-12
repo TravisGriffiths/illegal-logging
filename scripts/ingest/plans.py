@@ -60,8 +60,8 @@ def create_record(row):
     row.get('ULTIMO_TRAMITE')        # last_processed
     )
 
-def ingest(dir: str, db: str):
-    json_files = [f for f in os.listdir(dir) if os.path.isfile(f) and f.endswith('json')]
+def ingestPlans(dir: str, db: str):
+    json_files = [f'{dir}/{f}' for f in os.listdir(dir) if os.path.isfile(f'{dir}/{f}') and f.endswith('json')]
     if len(json_files) > 0:
         connection = sql_connection(db)
         cursor = connection.cursor()

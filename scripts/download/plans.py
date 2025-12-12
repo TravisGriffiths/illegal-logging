@@ -5,29 +5,38 @@
 # Information for
 # Amazon here: https://dadosabertos.ibama.gov.br/en/dataset/sinaflor-poa-amazonia-legal/resource/e1c34194-677f-4f9a-9192-01a1fbafa55f
 # Other biomes here: https://dadosabertos.ibama.gov.br/en/dataset/sinaflor-poa-outros-biomas/resource/16a06598-3eee-44cb-89a6-ea80f384b59d
-from ..config import PMFS_URL, PMFS_DIR
+from ..config import PLANS_AMAZON_URL, PLANS_OTHER_URL
 from .fetch import fetch
 from .unzip import unzip
 import os
 
-def downloadPMFS(dir: str):
-    save_file = f'{dir}/PMFS_ALL.zip'
-    if os.path.exists(save_file):
-        print(f'PMFS file found, skipping download')
-        return
-    print(f'Fetching PMFS from {PMFS_URL} to place in {save_file}')
-    # First create the directory
-    if not os.path.exists(dir):
-        os.makedirs(dir)
-        print(f'Created directory: {PMFS_DIR}')
-    else:
-        print(f'Found directory: {dir} ready for download')
-    fetch(PMFS_URL, save_file)
+def downloadPlans(dir: str):
+    amazon_file = f'{dir}/POA_Amazon.zip'
+    other_file = f'{dir}/POA_Other.zip'
+    downloads = [{
+        'url': PLANS_AMAZON_URL,
+        'file': amazon_file
+    }, {
+       'url': PLANS_OTHER_URL,
+        'file': other_file
+    }]
+    for download in downloads:
+        if os.path.exists(download.get('file')):
+            print(f'Plans file found, skipping download')
+            continue
+        else:
+            print(f'Fetching plans from {download.get('url')} to place in {download.get('file')}')
+            # create the directory if needed
+            if not os.path.exists(dir):
+                os.makedirs(dir)
+                print(f'Created directory: {dir}')
+            else:
+                print(f'Found directory: {dir} ready for download')
+            # Directory built/found, download
+            fetch(download.get('url'), download.get('file'))
 
-def unzipPMFS(dir: str):
-    zip_file = f'{dir}/PMFS_ALL.zip'
-    if not os.path.exists(zip_file):
-        print(f'PMFS zip file not found')
-        return
-    else:
-        unzip(zip_file, dir)
+def unzipPlans(dir: str):
+    zip_files = [f'{dir}/{f}' for f in os.listdir(dir) if os.path.isfile(f'{dir}/{f}') and f.endswith('zip')]
+    print(f'Found {len(zip_files)} to unzip in directory {dir}')
+    for file in zip_files:
+        unzip(file, dir)
