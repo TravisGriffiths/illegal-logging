@@ -1,4 +1,4 @@
-from .fetch import fetch, get
+from .fetch import fetch
 from .unzip import unzip
 from ..config import TRANSPORT_URL
 import os
