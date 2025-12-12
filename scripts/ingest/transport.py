@@ -1,0 +1,57 @@
+
+
+# Nome/Razão Social do Remetente: Nome do detentor do empreendimento de origem da carga, podendo ser pessoa física ou jurídica. Para pessoa física apenas as iniciais dos nomes são exibidas. Formato: Texto;
+# CPF/CNPJ do Remetente: Número do CPF ou CNPJ do detentor do empreendimento de origem da carga. Para pessoa física apenas os três primeiros dígitos do CPF são exibidos. Formato: Texto;
+# UF de Origem: Sigla da unidade federativa onde localiza-se o empreendimento de origem da carga. Formato: Texto;
+# Município de Origem: Nome do município onde localiza-se o empreendimento de origem da carga. Formato: Texto;
+# CTF do Remetente: Número identificador do detentor do empreendimento de origem da carga, na base do IBAMA. Formato: Texto;
+# Tipo de Origem: Tipo do empreendimento de origem da carga (e descrição do tipo de autorização, se houver). Formato: Texto;
+# Órgão Homologador: Órgão homologador da origem. Formato: Texto;
+# Data da Homologação: Data de homologação da origem. Formato: Texto formatado em DD/MM/AAAA;
+# Nome do Pátio de Origem: Nome do empreendimento de origem da carga. Formato: Texto;
+# Nº de Série da Autex: Número de série identificador da autorização de exploração (para empreendimentos do tipo AUTEX e PATIOAUTEX vinculado) de origem da carga. Formato: Texto;
+# Nº da Autorização Original: Número da autorização original da autorização de exploração (para empreendimentos do tipo AUTEX). Formato: Texto;
+# Tipo de Autex: Descrição do tipo da autorização de exploração (para empreendimentos do tipo AUTEX e PATIOAUTEX vinculado). Formato: Texto;
+# Órgão Emissor da Autex: Órgão emissor da autorização de exploração (para empreendimentos do tipo AUTEX). Formato: Texto;
+# Data de Validade da Autex: Data de validade da autorização de exploração (para empreendimentos do tipo AUTEX e PATIOAUTEX vinculado). Formato: Texto formatado em DD/MM/AAAA;
+# Nº da DI: Número da declaração de importação (apenas para origens do tipo DI). Formato: Texto;
+# Órgão Emissor da DI: Órgão emissor da declaração de importação (apenas para origens do tipo DI). Formato: Texto;
+# Data de Validade da DI: Data de validade da declaração de importação (apenas para origens do tipo DI). Formato: Texto formatado em DD/MM/AAAA;
+# Nome Porto de Entrada no País: Nome do porto nacional (ou equivalente) de entrada indicado na declaração de importação (apenas para origens do tipo DI). Formato: Texto;
+# País de Origem: Nome do país de origem da importação (apenas para origens do tipo DI). Formato: Texto;
+# Nº da Autesp: Número identificador da autorização especial (apenas para origens do tipo AUTESP). Formato: Texto;
+# Órgão Emissor da Autesp: Órgão emissor da autorização especial (apenas para origens do tipo AUTESP). Formato: Texto;
+# Data de Validade da Autesp: Data de validade da autorização especial (apenas para origens do tipo AUTESP). Formato: Texto formatado em DD/MM/AAAA;
+# Latitude de Origem: Coordenada da latitude do empreendimento de origem da carga, em graus decimais. Formato: número decimal separador ponto;
+# Longitude de Origem: Coordenada da longitude do empreendimento de origem da carga, em graus decimais. Formato: número decimal separador ponto;
+# UF de Destino: Sigla da unidade federativa onde localiza-se o empreendimento de destino da carga. Formato: Texto;
+# Município de Destino: Nome do município onde localiza-se o empreendimento de destino da carga. Formato: Texto;
+# Nome/Razão Social Destinatário: Nome do detentor do empreendimento de destino da carga, podendo ser pessoa física ou jurídica. Para pessoa física apenas as iniciais dos nomes são exibidas. Formato: Texto;
+# CPF/CNPJ do Destinatário: Número do CPF ou CNPJ do detentor do empreendimento de destino da carga. Para pessoa física apenas os três primeiros dígitos do CPF são exibidos. Formato: Texto;
+# CTF do Destinatário: Número identificador do detentor do empreendimento de destino da carga, na base do IBAMA. Formato: Texto;
+# Nome do Pátio de Destino: Nome do empreendimento de destino da carga. Formato: Texto;
+# Latitude do Destino: Coordenada da latitude do empreendimento de destino da carga, em graus decimais. Formato: Número decimal;
+# Longitude do Destino: Coordenada da longitude do empreendimento de destino da carga, em graus decimais. Formato: Número decimal;
+# Nome Porto de Saída do País: Nome do porto nacional (ou equivalente) de destino da carga para operações de exportação registradas nos estados Rondônia, Pará, Maranhão, Minas Gerais, Mato Grosso. É exibida a mesma informação do porto de entrada para as origens do tipo DI (independente da UF). Formato: Texto;
+# Município do Porto: Nome do município onde localiza-se o porto de entrada nacional de destino da carga para operações de exportação registradas nos estados Rondônia, Pará, Maranhão, Minas Gerais, Mato Grosso. É exibida a mesma informação do porto de entrada para as origens do tipo DI (independente da UF). Formato: Texto;
+# UF do Porto: Sigla da unidade federativa onde localiza-se o porto de entrada nacional de destino da carga para operações de exportação registradas nos estados Rondônia, Pará, Maranhão, Minas Gerais, Mato Grosso. É exibida a mesma informação do porto de entrada para as origens do tipo DI (independente da UF). Formato: Texto;
+# País de Destino: Nome do país destino da carga para operações de exportação registradas nos estados Rondônia, Pará, Maranhão, Minas Gerais, Mato Grosso. É exibida a mesma informação do porto de entrada para as origens do tipo DI. Formato: Texto;
+# Data de Emissão do DOF: Data da emissão do DOF. Formato: Texto formatado em DD/MM/AAAA;
+# Ano: Ano da data de emissão do DOF. Formato: Texto no formato AAAA;
+# Validade Inicial do DOF: Data de validade inicial do DOF. Formato: Texto formatado em DD/MM/AAAA;
+# Validade Final do DOF: Data de validade final atual do DOF. Formato: Texto formatado em DD/MM/AAAA;
+# Data da Última Transação: Descrição da última transação no DOF que tenha alterado seu status. Formato: Texto formatado em DD/MM/AAAA;
+# Data da Última Transação: Data da última transação do DOF que tenha alterado seu status. Formato: Texto formatado em DD/MM/AAAA;
+# Nº da Oferta: Identificador interno do IBAMA da oferta a partir da qual o DOF foi gerado (se houver). Formato: Texto;
+# Nº de Série do DOF: Número de série identificador do DOF, gerado pelos sistemas. Formato: Texto;
+# Código de Controle do DOF: Código de controle de 16 dígitos utilizados para verificar a validade do DOF. Formato: Texto;
+# Rota do Transporte: Municípios que formam a rota do transporte, incluindo possíveis trechos de transbordo. Formato: Texto;
+# Produto: Tipo de produto madeireiro do item transportado. Formato: Texto;
+# Código de rastreio: Código de rastreio do produto presente no DOF+. Formato: Texto;
+# Nome Científico: Nome Científico da espécie da matéria-prima do item transportado. Formato: Texto;
+# Nome Popular: Nome popular da espécie matéria-prima do item transportado. Formato: Texto;
+# Unidade: Unidade de medida utilizada para o volume do item informado, de acordo com o tipo de produto do item. Formato: Texto;
+# Volume: Quantidade de volume informada do item transportado. Formato: Número decimal;
+# Valor Unitário (R$): Valor comercial individual declarado do item transportado. Formato: Número decimal.
+# Valor Consolidado DOF+ (R$): Valor comercial consolidado declarado do item transportado. Formato: Número decimal.
+# Sistema Originário: Sistema Originário do DOF. Formato: Texto;

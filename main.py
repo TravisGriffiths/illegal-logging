@@ -2,7 +2,8 @@
 
 from scripts.download.pmfs import downloadPMFS, unzipPMFS
 from scripts.download.cnpj import downloadCNPJ
-from scripts.config import PMFS_DIR, CNPJ_DIR
+from scripts.download.transport import downloadTransport, unzipTransport
+from scripts.config import PMFS_DIR, CNPJ_DIR, TRANSPORT_DIR
 from cli import cli
 import os
 import sys
@@ -10,6 +11,7 @@ import sys
 ROOT_DIR = os.path.realpath(os.path.join(os.path.dirname(__file__), '.'))
 PMFS_ROUTE = f"{ROOT_DIR}/data-files/{PMFS_DIR}"
 CNPJ_ROUTE = f"{ROOT_DIR}/data-files/{CNPJ_DIR}"
+TRANSPORT_ROUTE = f"{ROOT_DIR}/data-files/{TRANSPORT_DIR}"
 
 def cnpj(action: str):
     if action == 'download':
@@ -24,7 +26,9 @@ def cnpj(action: str):
 
 def transport(action: str):
     if action == 'download':
-        print('TODO: build download transport')
+        downloadTransport(TRANSPORT_ROUTE)
+        unzipTransport(TRANSPORT_ROUTE)
+
     if action == 'ingest':
         print('TODO: build ingest transport')
 
