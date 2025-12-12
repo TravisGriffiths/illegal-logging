@@ -68,7 +68,6 @@ def ingestPlans(dir: str, db: str):
         cursor.execute(poa_sql.rm_table_sql)
         connection.commit()
         cursor.execute(poa_sql.create_table_sql)
-        index = 0
         for file in json_files:
             with open(file) as poa_json_file:
                 data = json.load(poa_json_file)

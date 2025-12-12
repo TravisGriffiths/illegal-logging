@@ -1,8 +1,8 @@
-import tables
+from .tables import TRANSPORT
 
-rm_table_sql = f"""DROP TABLE IF EXISTS {tables.TRANSPORT};"""
+rm_table_sql = f"""DROP TABLE IF EXISTS {TRANSPORT};"""
 
-create_table_sql = f"""CREATE TABLE {tables.TRANSPORT} (
+create_table_sql = f"""CREATE TABLE {TRANSPORT} (
     id INTEGER PRIMARY KEY,
     import_declaration_id TEXT,
     autesp_id TEXT,
@@ -61,7 +61,7 @@ create_table_sql = f"""CREATE TABLE {tables.TRANSPORT} (
     item_value REAL
     )"""
 
-sql = f"""INSERT INTO {tables.TRANSPORT} (
+sql = f"""INSERT INTO {TRANSPORT} (
     id,
     import_declaration_id,
     autesp_id,

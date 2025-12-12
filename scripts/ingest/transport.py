@@ -1,8 +1,22 @@
-import os
 import json
+import pandas as pd
+import sqlite3
+import os
+from sqlite3 import Error
+from ..SQL import transport_sql, tables
 
+def sql_connection(db: str):
+    try:
+      conn = sqlite3.connect(db)
+      return conn
+    except Error:
+      print(Error)
+
+index = 0
 # Create Transport Record 56 Columns 
-def create_record(index, row):
+def create_record(row):
+    global index
+    index += 1
     return (
         index + 1,    
         row.get("Nr_da_DI"), # Nº da DI: Número da declaração de importação (apenas para origens do tipo DI). Formato: Texto;
@@ -62,7 +76,37 @@ def create_record(index, row):
         row.get("Valor_UnitarioR$"), # Valor Unitário (R$): Valor comercial individual declarado do item transportado. Formato: Número decimal.
     )
 
-
-
 ## Documented, but not found in records
 # Órgão Emissor da Autex: Órgão emissor da autorização de exploração (para empreendimentos do tipo AUTEX). Formato: Texto;
+
+def ingestTransport(dir: str, db: str):
+    json_files = [f'{dir}/{f}' for f in os.listdir(dir) if os.path.isfile(f'{dir}/{f}') and f.endswith('json')]
+    if len(json_files) > 0:
+        connection = sql_connection(db)
+        cursor = connection.cursor()
+        cursor.execute(transport_sql.rm_table_sql)
+        connection.commit()
+        cursor.execute(transport_sql.create_table_sql)
+        file_count = len(json_files) 
+        for index, file in enumerate(json_files):
+            with open(file) as json_file:
+                print(f'Processing {file}...')
+                data = json.load(json_file)
+                records = data['data']
+                df = pd.DataFrame.from_dict(records, orient='columns')
+                records = [create_record(record) for _, record in df.iterrows() ]
+                cursor.executemany(transport_sql.sql, records)
+                connection.commit()
+                print(f'Processed {len(records)} from {file}')
+                print(f'{index + 1} files of {file_count} ingested')
+        else:
+            print('Ingest completed, verifing record counts...')
+            count = cursor.execute(f'select count(*) from {tables.TRANSPORT};')
+            print(f"Records Ingested: {count}")
+            if (connection):
+              connection.close()
+
+    else:
+        print(f'No files found for Annual Plan ingest at: {dir}') 
+   
+

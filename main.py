@@ -3,6 +3,7 @@
 from scripts.download.pmfs import downloadPMFS, unzipPMFS
 from scripts.download.cnpj import downloadCNPJ
 from scripts.download.transport import downloadTransport, unzipTransport 
+from scripts.ingest.transport import ingestTransport
 from scripts.ingest.plans import ingestPlans
 from scripts.download.plans import downloadPlans, unzipPlans
 from scripts.config import AUTEX_DIR, DATA_DIR, DATABASE_DIR, SQL_DATABASE, PMFS_DIR, PLANS_DIR, PLANS_AMAZON_URL, PLANS_OTHER_URL, CNPJ_DIR, TRANSPORT_DIR
@@ -42,7 +43,7 @@ def transport(action: str):
         unzipTransport(TRANSPORT_ROUTE)
 
     if action == 'ingest':
-        print('TODO: build ingest transport')
+        ingestTransport(TRANSPORT_ROUTE, DATABASE)
 
 def main():
     noun, verb = None, None
