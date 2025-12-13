@@ -1,4 +1,6 @@
 # These are the settings for all the scripts. Behavior and targets can be easily changed by changing values here
+
+# Autex are the authorizations for forest exploration, logging permits, 
 AUTEX_DIR       = 'Autex'
 AUTEX_URL       = 'https://dadosabertos.ibama.gov.br/dados/DOF/DOFAutorizacoes/DOFAutorizacoes_json.zip'
 DATA_DIR        = 'data-files'

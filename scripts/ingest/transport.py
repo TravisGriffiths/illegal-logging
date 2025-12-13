@@ -82,12 +82,18 @@ def create_record(row):
 def ingestTransport(dir: str, db: str):
     json_files = [f'{dir}/{f}' for f in os.listdir(dir) if os.path.isfile(f'{dir}/{f}') and f.endswith('json')]
     if len(json_files) > 0:
+        file_count = len(json_files)
+        print(f'{file_count} files  found for ingestion, starting database init')
         connection = sql_connection(db)
         cursor = connection.cursor()
+        print('Removing any old records')
         cursor.execute(transport_sql.rm_table_sql)
         connection.commit()
+        print('Re-creating table')
         cursor.execute(transport_sql.create_table_sql)
+        connection.commit()
         file_count = len(json_files) 
+        print('Ingesting files...')
         for index, file in enumerate(json_files):
             with open(file) as json_file:
                 print(f'Processing {file}...')
@@ -102,7 +108,7 @@ def ingestTransport(dir: str, db: str):
         else:
             print('Ingest completed, verifing record counts...')
             count = cursor.execute(f'select count(*) from {tables.TRANSPORT};')
-            print(f"Records Ingested: {count}")
+            print(f"Records Ingested: {count.fetchall()}")
             if (connection):
               connection.close()
 
@@ -110,3 +116,4 @@ def ingestTransport(dir: str, db: str):
         print(f'No files found for Annual Plan ingest at: {dir}') 
    
 
+916.67
