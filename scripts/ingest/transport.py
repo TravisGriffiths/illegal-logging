@@ -51,7 +51,7 @@ def create_record(row):
         row.get("Volume"), # Volume: Quantidade de volume informada do item transportado. Formato: Número decimal;
         row.get("CodigoRastreio"), # Código de rastreio: Código de rastreio do produto presente no DOF+. Formato: Texto;
         row.get("Nome_do_Patio_de_Destino"), # Nome do Pátio de Destino: Nome do empreendimento de destino da carga. Formato: Texto;
-        row.get("UF_do_Porto"), # UF do Porto: Sigla da unidade federativa onde localiza-se o porto de entrada nacional de destino da carga para operações de exportação registradas nos estados Rondônia, Pará, Maranhão, Minas Gerais, Mato Grosso. É exibida a mesma informação do porto de entrada para as origens do tipo DI (independente da UF). Formato: Texto;
+        row.get("UF_do_Porto"), # UF do Porto: Sigla da unidade Ffederativa onde localiza-se o porto de entrada nacional de destino da carga para operações de exportação registradas nos estados Rondônia, Pará, Maranhão, Minas Gerais, Mato Grosso. É exibida a mesma informação do porto de entrada para as origens do tipo DI (independente da UF). Formato: Texto;
         row.get("Ano"), # Ano: Ano da data de emissão do DOF. Formato: Texto no formato AAAA;
         row.get("Data_da_Ultima_Transacao_do_DOF"), # Data da Última Transação: Descrição da última transação no DOF que tenha alterado seu status. Formato: Texto formatado em DD/MM/AAAA;
         row.get("Latitude_do_Destino"), # Latitude do Destino: Coordenada da latitude do empreendimento de destino da carga, em graus decimais. Formato: Número decimal;
@@ -79,8 +79,27 @@ def create_record(row):
 ## Documented, but not found in records
 # Órgão Emissor da Autex: Órgão emissor da autorização de exploração (para empreendimentos do tipo AUTEX). Formato: Texto;
 
-def ingestTransport(dir: str, db: str):
-    json_files = [f'{dir}/{f}' for f in os.listdir(dir) if os.path.isfile(f'{dir}/{f}') and f.endswith('json')]
+def hasYear(name: str, years: list[str]):
+    # ex: DOFTransportes_ano_2025_uf_SC.json
+    tokens = name.split('_')
+    year = tokens[2]
+    if year in years:
+        return True 
+    return False
+
+def includedState(name: str):
+    states_with_plans = {'MA', 'PI', 'CE', 'RN', 'PB', 'PE', 'BA', 'MG', 'SC', 'RO','PA', 'AM', 'AC','AP','RR','TO','MT'}
+    # ex: DOFTransportes_ano_2025_uf_SC.json
+    tokens = name.split('_')
+    last = tokens[4]
+    state, _ = last.split('.')
+    return state in states_with_plans
+
+   
+def ingestTransport(dir: str, db: str, years: list[str]):
+    print(f'Looking for years: {', '.join(years)}')
+    
+    json_files = [f'{dir}/{f}' for f in os.listdir(dir) if os.path.isfile(f'{dir}/{f}') and f.endswith('json') and hasYear(f, years)]
     if len(json_files) > 0:
         file_count = len(json_files)
         print(f'{file_count} files  found for ingestion, starting database init')
@@ -94,13 +113,16 @@ def ingestTransport(dir: str, db: str):
         connection.commit()
         file_count = len(json_files) 
         print('Ingesting files...')
+        # These are shipping records referencing federal systems
+        federal_sytems = {'DOF Legado', 'DOF+'}
         for index, file in enumerate(json_files):
             with open(file) as json_file:
                 print(f'Processing {file}...')
                 data = json.load(json_file)
                 records = data['data']
                 df = pd.DataFrame.from_dict(records, orient='columns')
-                records = [create_record(record) for _, record in df.iterrows() ]
+                # Filter records to only look at shipments of logs specifically
+                records = [create_record(record) for _, record in df.iterrows() if record.get("Produto") == 'Tora' and record.get("SistemaOriginario") in federal_sytems]
                 cursor.executemany(transport_sql.sql, records)
                 connection.commit()
                 print(f'Processed {len(records)} from {file}')
@@ -116,4 +138,102 @@ def ingestTransport(dir: str, db: str):
         print(f'No files found for Annual Plan ingest at: {dir}') 
    
 
-916.67
+    ### Products
+    # select * from shipments where product = 'Tora' and dof_system_of_origin in ('DOF Legado', 'DOF+') limit 10;
+    #Madeira serrada (viga)
+    # Tora
+    # Madeira serrada (tábua)
+    # Produto acabado
+    # Madeira serrada (pranchão desdobrado)
+    # Sarrafo
+    # Lenha
+    # Madeira serrada (vigota)
+    # Madeira serrada (prancha)
+    # Forro (Lambril)
+    # Madeira serrada (caibro)
+    # Mourões
+    # Lascas
+    # Alisar
+    # Portal ou Batente
+    # Carvão Vegetal
+    # Bloco, quadrado ou filé
+    # Resíduo para Aproveitamento Industrial
+    # Ripas
+    # Dormente
+    # Escoramento
+    # Mourões (st)
+    # Lascas (st)
+    # Decking
+    # Pisos e Assoalhos
+    # Poste
+    # Madeira Aplainada 4 Faces (S4S)
+    # Palanques roliços
+    # Rolete
+    # Cavacos
+    # Tacos
+    # Tábua Curta
+    # Manta sarrafeada
+    # Sarrafo Curto
+    # Lâmina Faqueada
+    # Compensado
+    # Resíduo para Fins Energéticos
+    # Bolacha de Madeira
+    # Vigota Curta
+    # Viga Curta
+    # Madeira serrada (vareta)
+    # Palmito in natura
+    # Porta Lisa Maciça 
+    # Rodapé
+    # Caibro Curto
+    # Ripa Curta
+    # Lâmina Desenrolada
+    # Estacas
+    # Madeira Aplainada 2 Faces (S2S)
+    # Caibrinhos
+    # Carvão Vegetal de resíduo
+    # Toretes
+    # Vara
+    # Lenha m3
+    # Lenha de espécies exóticas
+    # Madeira serrada
+    # Madeira beneficiada
+    # Lasca
+    # Mourão
+    # Xaxim
+    # Estaca
+    # Madeira serrada de aproveitamento
+    # Resíduo para aproveitamento industrial
+    # Torete
+    # Bolacha
+    # Serragem
+    # Palanques roliços (st)
+    # Resíduo de lâmina
+    # Lâmina faqueada
+    # Lâmina torneada
+    # Resíduo para fins energéticos
+    # Bloco, Quadrado ou Filé
+    # Carvão vegetal
+    # Carvão vegetal de espécies exóticas
+    # Chapa de fibra
+    # Toretes (st)
+    # Madeira serrada (pranchão)
+    # Palanque roliço
+    # Planta viva
+    # Óleos Essenciais
+    # Carvão vegetal de resíduo
+    # Moinha de carvão
+    # Cavacos (st)
+    # Madeira beneficiada de aproveitamento
+    # Tora (DOF1)
+    # Lapidados
+    # Muda
+    # Chapa OSB
+    # Briquete
+    # Aglomerado
+    # Casca
+    # Desfolhado
+    # Rachas
+    # Folhas
+    # Porta Lisa Maciça
+    # Xaxim (st)
+    # Raízes

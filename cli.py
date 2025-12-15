@@ -33,7 +33,10 @@ def prompt():
     
 
 def verify_command(cmd: str):
-    noun, verb = cmd.split()
+    tokens = cmd.split()
+    noun = tokens[0]
+    verb = tokens[1]
+    args = tokens[2:]
     if not valid_pair(noun, verb):
         if not noun in nouns: 
             print(f'{noun} not a recognized command, try one of: {', '.join([n for n in nouns])}')
@@ -41,7 +44,7 @@ def verify_command(cmd: str):
             print(f'{verb} not a recognized action, try one of: {', '.join([v for v in verbs])}')
         return prompt()
     else:       
-        return [noun, verb]
+        return [noun, verb, args]
 
 def cli(args: list[str] | None):
     if args:

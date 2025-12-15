@@ -37,24 +37,24 @@ def cnpj(action: str):
     if action == 'ingest':
         print('TODO: Build CNPJ ingest')
 
-def transport(action: str):
+def transport(action: str, args: list[str]):
     if action == 'download':
         downloadTransport(TRANSPORT_ROUTE)
         unzipTransport(TRANSPORT_ROUTE)
 
     if action == 'ingest':
-        ingestTransport(TRANSPORT_ROUTE, DATABASE)
+        ingestTransport(TRANSPORT_ROUTE, DATABASE, args)
 
 def main():
-    noun, verb = None, None
+    noun, verb, args = None, None, None
     if len(sys.argv) > 1:
-        noun, verb = cli(sys.argv[1:])
+        noun, verb, arguments = cli(sys.argv[1:])
     else:
-        noun, verb = cli(None)
+        noun, verb, arguments = cli(None)
     if noun == 'cnpj':
         cnpj(verb)
     if noun == 'transport':
-        transport(verb)
+        transport(verb, arguments)
     if noun == 'plans':
         plans(verb)
 
