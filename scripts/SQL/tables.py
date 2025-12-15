@@ -3,3 +3,4 @@
 DOF = "permits"  #DOF / Autex
 POA = "annual_operation_plans"  #DOA
 TRANSPORT = "shipments"
+SHIPMENT_TALLY = "shipped_timber"

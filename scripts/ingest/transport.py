@@ -1,7 +1,9 @@
 import json
-import pandas as pd
+import pandas as pd 
+from pandas import Series
 import sqlite3
 import os
+import re
 from sqlite3 import Error
 from ..SQL import transport_sql, tables
 
@@ -87,6 +89,7 @@ def hasYear(name: str, years: list[str]):
         return True 
     return False
 
+# This is hardcoded for now, this list are the states that have POA records 
 def includedState(name: str):
     states_with_plans = {'MA', 'PI', 'CE', 'RN', 'PB', 'PE', 'BA', 'MG', 'SC', 'RO','PA', 'AM', 'AC','AP','RR','TO','MT'}
     # ex: DOFTransportes_ano_2025_uf_SC.json
@@ -95,10 +98,19 @@ def includedState(name: str):
     state, _ = last.split('.')
     return state in states_with_plans
 
-   
+# This is to filter out records from non-federal systems. 
+federal_sytems = {'DOF Legado', 'DOF+'}
+def isFederal(record: Series[any]):
+    return record.get("SistemaOriginario") in federal_sytems
+
+
+
+## Look in the download directory, transport folder, and put all records that
+# 1. Are in the list of years, - many records may be for years before any annual plans are available
+# 2. Are for logs, sawn lumber and other products are shipments from mill to port rather than direct from forest logging zones, so are excluded
+# 3. Have the originating system as the DOF Legacy or DOF new system, i.e. Federal systems. State systems have the majority    
 def ingestTransport(dir: str, db: str, years: list[str]):
     print(f'Looking for years: {', '.join(years)}')
-    
     json_files = [f'{dir}/{f}' for f in os.listdir(dir) if os.path.isfile(f'{dir}/{f}') and f.endswith('json') and hasYear(f, years)]
     if len(json_files) > 0:
         file_count = len(json_files)
@@ -113,34 +125,38 @@ def ingestTransport(dir: str, db: str, years: list[str]):
         connection.commit()
         file_count = len(json_files) 
         print('Ingesting files...')
-        # These are shipping records referencing federal systems
-        federal_sytems = {'DOF Legado', 'DOF+'}
+
         for index, file in enumerate(json_files):
             with open(file) as json_file:
                 print(f'Processing {file}...')
                 data = json.load(json_file)
                 records = data['data']
                 df = pd.DataFrame.from_dict(records, orient='columns')
-                # Filter records to only look at shipments of logs specifically
-                records = [create_record(record) for _, record in df.iterrows() if record.get("Produto") == 'Tora' and record.get("SistemaOriginario") in federal_sytems]
+                # Filter records to only look at shipments of logs specifically (no sawn products) from the federal systems specifically
+                records = [create_record(record) for _, record in df.iterrows() if record.get("Produto") == 'Tora' and isFederal(record)]
                 cursor.executemany(transport_sql.sql, records)
                 connection.commit()
-                print(f'Processed {len(records)} from {file}')
+                # Grab the file name only for clearer log messages
+                file_name = re.split(r'[/\\]', file)[-1]
+                print(f'Ingested {len(records)} shipping records from {file_name}')
                 print(f'{index + 1} files of {file_count} ingested')
         else:
             print('Ingest completed, verifing record counts...')
             count = cursor.execute(f'select count(*) from {tables.TRANSPORT};')
             print(f"Records Ingested: {count.fetchall()}")
+            print('Vacuuming db to clean up space, this may take awhile')
+            cursor.execute('VACUUM;')
+            print('Vacuum cleanup complete..')
             if (connection):
               connection.close()
 
     else:
-        print(f'No files found for Annual Plan ingest at: {dir}') 
+        print(f'No files found for Shipping Records ingest at: {dir}') 
    
 
-    ### Products
-    # select * from shipments where product = 'Tora' and dof_system_of_origin in ('DOF Legado', 'DOF+') limit 10;
-    #Madeira serrada (viga)
+    ### Products:   select distinct products from shipments;
+    #
+    # Madeira serrada (viga)
     # Tora
     # Madeira serrada (tábua)
     # Produto acabado
