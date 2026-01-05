@@ -18,3 +18,4 @@ PLANS_OTHER_URL = "https://dadosabertos.ibama.gov.br/dados/SINAFLOR/poa/poaOutro
 # Transport are the transportation records against Documento de Origem Florestal (DOF), Forest Origin Documentation system
 TRANSPORT_DIR   = 'transport'
 TRANSPORT_URL   = 'https://dadosabertos.ibama.gov.br/dados/DOF/DOFTransportes/DOFTransportes_json.zip'
+PLOTS_DIR       = 'CAR'

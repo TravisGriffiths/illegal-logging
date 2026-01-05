@@ -11,7 +11,8 @@ nouns = {
     'cnpj',
     'dof',
     'plans',
-    'transport'
+    'transport',
+    'origins'
 }
 
 verbs = {

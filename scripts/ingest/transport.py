@@ -7,6 +7,7 @@ import re
 from sqlite3 import Error
 from ..SQL import transport_sql, tables
 
+
 def sql_connection(db: str):
     try:
       conn = sqlite3.connect(db)
@@ -100,7 +101,7 @@ def includedState(name: str):
 
 # This is to filter out records from non-federal systems. 
 federal_sytems = {'DOF Legado', 'DOF+'}
-def isFederal(record: Series[any]):
+def isFederal(record: Series):
     return record.get("SistemaOriginario") in federal_sytems
 
 

@@ -6,7 +6,8 @@ from scripts.download.transport import downloadTransport, unzipTransport
 from scripts.ingest.transport import ingestTransport
 from scripts.ingest.plans import ingestPlans
 from scripts.download.plans import downloadPlans, unzipPlans
-from scripts.config import AUTEX_DIR, DATA_DIR, DATABASE_DIR, SQL_DATABASE, PMFS_DIR, PLANS_DIR, PLANS_AMAZON_URL, PLANS_OTHER_URL, CNPJ_DIR, TRANSPORT_DIR
+from scripts.ingest.origins import ingest_origins
+from scripts.config import AUTEX_DIR, DATA_DIR, DATABASE_DIR, SQL_DATABASE, PMFS_DIR, PLANS_DIR, PLANS_AMAZON_URL, PLANS_OTHER_URL, CNPJ_DIR, TRANSPORT_DIR, PLOTS_DIR
 from cli import cli
 import os
 import sys
@@ -18,6 +19,14 @@ PLANS_ROUTE = f"{ROOT_DIR}/{DATA_DIR}/{PLANS_DIR}"
 PMFS_ROUTE = f"{ROOT_DIR}/{DATA_DIR}/{PMFS_DIR}"
 CNPJ_ROUTE = f"{ROOT_DIR}/{DATA_DIR}/{CNPJ_DIR}"
 TRANSPORT_ROUTE = f"{ROOT_DIR}/{DATA_DIR}/{TRANSPORT_DIR}"
+ORIGINS_ROUTE = TRANSPORT_ROUTE
+PLOTS_ROUTE = f"{ROOT_DIR}/{DATA_DIR}/{PLOTS_DIR}"
+
+def origins(action: str):
+    if action == 'download':
+        print('TODO: implement origins download')
+    if action == 'ingest':
+        ingest_origins(ORIGINS_ROUTE, PLOTS_ROUTE)
 
 def plans(action: str):
     if action == 'download':
@@ -57,6 +66,8 @@ def main():
         transport(verb, arguments)
     if noun == 'plans':
         plans(verb)
+    if noun == 'origins':
+        origins(verb)
 
 if __name__ == '__main__':
     main()
